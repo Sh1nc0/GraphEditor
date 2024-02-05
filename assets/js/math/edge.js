@@ -4,7 +4,8 @@ class Edge {
         this.end = end;
     }
 
-    draw(ctx, { color = "black", width = 2 } = {}) {
+    draw(ctx, { color = "black", width = 2, dash = []} = {}) {
+        ctx.setLineDash(dash);
         ctx.beginPath();
         ctx.moveTo(this.start.x, this.start.y);
         ctx.lineTo(this.end.x, this.end.y);

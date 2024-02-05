@@ -43,6 +43,7 @@ class GraphEditor {
     #handleMove(e) {
         this.mouse = new Point(e.offsetX, e.offsetY);
         this.hover = getNearestPoint(this.graph.nodes, this.mouse, 10);
+
     }
 
     #handleKey(e) {
@@ -62,6 +63,11 @@ class GraphEditor {
 
         if (this.selected) {
             this.selected.draw(this.ctx, { fill: true, fillColor: "red"});
+
+            if (this.mouse) {
+                const end = this.hover || this.mouse;
+                new Edge(this.selected, end).draw(this.ctx, {color: "red", dash: [5, 5] });
+            }
         }
 
         if (this.hover) {
