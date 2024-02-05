@@ -23,7 +23,10 @@ class GraphEditor {
     }
 
     #handleMouseDown() {
-        this.mousePressed = this.hover ? true : false;
+        if (this.hover && !this.selected){
+            this.selected = this.hover;
+            this.mousePressed = true;
+        }
     }
 
     #handleMouseUp() {
@@ -45,6 +48,7 @@ class GraphEditor {
 
     #select(point){
         if (this.selected) {
+            console.log(point)
             this.graph.addEdge(new Edge(this.selected, point));
         }
         this.selected = point;
@@ -54,7 +58,7 @@ class GraphEditor {
         this.mouse = new Point(e.offsetX, e.offsetY);
         this.hover = getNearestPoint(this.graph.nodes, this.mouse, 10);
 
-        if (this.mousePressed && this.selected) {
+        if (this.mousePressed) {
             this.selected.x = this.mouse.x;
             this.selected.y = this.mouse.y;
         }
