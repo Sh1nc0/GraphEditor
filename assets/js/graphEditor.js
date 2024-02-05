@@ -9,16 +9,26 @@ class GraphEditor {
         this.hover = null;
         this.selected = null;
         this.mouse = null;
+        this.mousePressed = false;
 
         this.init();
     }
 
     init() {
+        this.canvas.addEventListener('mousedown', this.#handleMouseDown.bind(this));
+        this.canvas.addEventListener('mouseup', this.#handleMouseUp.bind(this));
         this.canvas.addEventListener('click', this.#handleClick.bind(this));
         this.canvas.addEventListener('mousemove', this.#handleMove.bind(this));
         this.canvas.parentNode.addEventListener('keydown', this.#handleKey.bind(this));
     }
 
+    #handleMouseDown() {
+        this.mousePressed = this.hover ? true : false;
+    }
+
+    #handleMouseUp() {
+        this.mousePressed = false;
+    }
 
     #handleClick(e) {
         if (e.button === 0) {
@@ -44,6 +54,11 @@ class GraphEditor {
         this.mouse = new Point(e.offsetX, e.offsetY);
         this.hover = getNearestPoint(this.graph.nodes, this.mouse, 10);
 
+        if (this.mousePressed && this.selected) {
+            this.selected.x = this.mouse.x;
+            this.selected.y = this.mouse.y;
+        }
+
     }
 
     #handleKey(e) {
@@ -64,7 +79,7 @@ class GraphEditor {
         if (this.selected) {
             this.selected.draw(this.ctx, { fill: true, fillColor: "red"});
 
-            if (this.mouse) {
+            if (this.mouse && !this.mousePressed) {
                 const end = this.hover || this.mouse;
                 new Edge(this.selected, end).draw(this.ctx, {color: "red", dash: [5, 5] });
             }
