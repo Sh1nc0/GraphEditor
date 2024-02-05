@@ -73,7 +73,32 @@ class GraphEditor {
         }
     }
 
+    drawGrid() {
+        const gridSize = 20;
+        const gridColor = '#ccc';
+
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = gridColor;
+        this.ctx.lineWidth = 0.5;
+        this.ctx.setLineDash([]);
+
+        // Vertical lines
+        for (let x = 0; x <= canvas.width; x += gridSize) {
+            this.ctx.moveTo(x, 0);
+            this.ctx.lineTo(x, canvas.height);
+        }
+
+        // Horizontal lines
+        for (let y = 0; y <= canvas.height; y += gridSize) {
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(canvas.width, y);
+        }
+
+        this.ctx.stroke();
+    }
+
     display() {
+        this.drawGrid();
         this.graph.draw(this.ctx);
 
         if (this.selected) {

@@ -8,5 +8,5 @@ body {
 canvas {
     display: block;
     margin: 0 auto;
-    background-color: #6B4568;
+    background: radial-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
 }
