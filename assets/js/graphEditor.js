@@ -1,15 +1,19 @@
 class GraphEditor {
-    constructor(canvas, graph = new Graph()) {
-        this.canvas = canvas;
+    constructor(viewport, graph = new Graph()) {
+        this.viewport = viewport;
+        this.canvas = viewport.canvas;
+
         this.graph = graph;
 
         this.ctx = canvas.getContext('2d');
+
 
         this.actions = [];
         this.hover = null;
         this.selected = null;
         this.mouse = null;
         this.mousePressed = false;
+
 
         this.init();
     }
@@ -39,7 +43,7 @@ class GraphEditor {
                 this.#select(this.hover);
                 return;
             }
-            const node = new Point(e.offsetX, e.offsetY);
+            const node = new Point(e.offsetX  * this.viewport.zoom, e.offsetY * this.viewport.zoom);
             this.graph.addNode(node);
             this.#select(node);
             this.hover = null;
@@ -48,19 +52,22 @@ class GraphEditor {
 
     #select(point){
         if (this.selected) {
-            console.log(point)
             this.graph.addEdge(new Edge(this.selected, point));
         }
         this.selected = point;
     }
 
     #handleMove(e) {
-        this.mouse = new Point(e.offsetX, e.offsetY);
+        this.mouse = new Point(e.offsetX * this.viewport.zoom, e.offsetY * this.viewport.zoom);
         this.hover = getNearestPoint(this.graph.nodes, this.mouse, 10);
 
         if (this.mousePressed) {
-            this.selected.x = this.mouse.x;
-            this.selected.y = this.mouse.y;
+
+            const x = Math.round((this.mouse.x) / 20) * 20;
+            const y = Math.round(this.mouse.y / 20) * 20;
+
+            this.selected.x = x;
+            this.selected.y = y;
         }
 
     }
@@ -77,32 +84,7 @@ class GraphEditor {
         }
     }
 
-    drawGrid() {
-        const gridSize = 20;
-        const gridColor = '#ccc';
-
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = gridColor;
-        this.ctx.lineWidth = 0.5;
-        this.ctx.setLineDash([]);
-
-        // Vertical lines
-        for (let x = 0; x <= canvas.width; x += gridSize) {
-            this.ctx.moveTo(x, 0);
-            this.ctx.lineTo(x, canvas.height);
-        }
-
-        // Horizontal lines
-        for (let y = 0; y <= canvas.height; y += gridSize) {
-            this.ctx.moveTo(0, y);
-            this.ctx.lineTo(canvas.width, y);
-        }
-
-        this.ctx.stroke();
-    }
-
     display() {
-        this.drawGrid();
         this.graph.draw(this.ctx);
 
         if (this.selected) {

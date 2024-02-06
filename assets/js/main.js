@@ -12,10 +12,12 @@ const p4 = new Point(400, 400);
 const e1 = new Edge(p1, p3);
 const graph = new Graph([p1, p2, p3, p4], [e1]);
 
-const graphEditor = new GraphEditor(canvas, graph);
+const viewport = new Viewport(canvas);
+const graphEditor = new GraphEditor(viewport, graph);
 
 function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    viewport.reset();
     graphEditor.display();
     requestAnimationFrame(update);
 }
