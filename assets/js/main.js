@@ -20,4 +20,9 @@ function update() {
     requestAnimationFrame(update);
 }
 
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
 update();
